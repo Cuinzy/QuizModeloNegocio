@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evaluación – Metodología de Investigación</title>
+  <!--
+  ════════════════════════════════════════════════════════════════
+   CONFIGURACIÓN EMAILJS  (lee esto antes de abrir la página)
+  ════════════════════════════════════════════════════════════════
+   1. Crea cuenta GRATUITA en https://www.emailjs.com
+   2. Email Services → Add New Service  (ej.: Gmail)
+      → copia el Service ID  (ej.: service_abc123)
+   3. Email Templates → Create New Template
+      · To Email : jcampo@unicomfacauca.edu.co   (escríbelo fijo)
+      · Subject  : {{subject}}
+      · Body     : {{message}}
+      → copia el Template ID (ej.: template_xyz789)
+   4. Account → API Keys → copia la Public Key
+   5. Pega los tres valores en el objeto CFG que está al inicio
+      del bloque <script> al final de este archivo.
+  ════════════════════════════════════════════════════════════════
+   NOTA SOBRE EL LISTADO DE PARTICIPANTES
+   La lista acumulada se guarda en el navegador (localStorage).
+   Si todos los estudiantes usan el MISMO equipo/navegador, la
+   lista crece automáticamente y se incluye en cada correo.
+   Si cada estudiante usa su propio dispositivo, cada correo
+   individual llega por separado al docente.
+  ════════════════════════════════════════════════════════════════
+  -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <style>
+    :root {
+      --primary:      #0d47a1;
+      --primary-l:    #1976d2;
+      --primary-d:    #002171;
+      --ok:           #2e7d32;
+      --ok-bg:        #e8f5e9;
+      --fail:         #b71c1c;
+      --fail-bg:      #fce4ec;
+      --warn:         #e65100;
+      --border:       #e2e8f0;
+      --text:         #1e293b;
+      --muted:        #64748b;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #eef2f7;
+      min-height: 100vh;
+      padding: 24px 16px 48px;
+      color: var(--text);
+    }
+
+    .wrap { max-width: 780px; margin: 0 auto; }
+
+    /* ── Header ── */
+    .app-header {
+      background: linear-gradient(135deg, var(--primary-d) 0%, var(--primary-l) 100%);
+      border-radius: 16px 16px 0 0;
+      padding: 30px 40px;
+      color: #fff;
+      text-align: center;
+    }
+    .app-header .uni { font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; opacity: .7; margin-bottom: 8px; }
+    .app-header h1  { font-size: 21px; font-weight: 700; line-height: 1.3; margin-bottom: 6px; }
+    .app-header .sub{ font-size: 13px; opacity: .8; }
+
+    /* ── Card ── */
+    .card {
+      background: #fff;
+      border-radius: 0 0 16px 16px;
+      box-shadow: 0 8px 40px rgba(13,71,161,.13);
+      padding: 40px;
+    }
+
+    /* ── Screens ── */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ── Typography ── */
+    .sec-title { font-size: 20px; font-weight: 700; color: var(--primary-d); margin-bottom: 6px; }
+    .sec-desc  { font-size: 14px; color: var(--muted); margin-bottom: 32px; line-height: 1.6; }
+
+    /* ── Form ── */
+    .field { margin-bottom: 20px; }
+    .field label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+    .field input {
+      width: 100%; padding: 11px 14px;
+      border: 2px solid var(--border); border-radius: 8px;
+      font-size: 15px; color: var(--text); outline: none;
+      transition: border-color .2s;
+    }
+    .field input:focus { border-color: var(--primary-l); }
+
+    /* ── Buttons ── */
+    .btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 13px 24px;
+      border: none; border-radius: 8px;
+      font-size: 15px; font-weight: 600; cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-l)); color: #fff; }
+    .btn-primary:hover { box-shadow: 0 4px 18px rgba(13,71,161,.4); transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* ── Progress bar ── */
+    .prog-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .prog-label { font-size: 13px; color: var(--muted); }
+    .prog-track { height: 6px; background: var(--border); border-radius: 3px; margin-bottom: 28px; overflow: hidden; }
+    .prog-fill  { height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-l)); border-radius: 3px; transition: width .35s; }
+
+    /* ── Question card ── */
+    .q-card {
+      border: 2px solid var(--border); border-radius: 12px;
+      padding: 22px 24px; margin-bottom: 16px;
+      transition: border-color .2s;
+      scroll-margin-top: 20px;
+    }
+    .q-card.answered { border-color: #93c5fd; }
+    .q-card.unanswered-highlight { border-color: #fbbf24; background: #fffbeb; animation: pulse .4s ease; }
+    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.005)} }
+
+    .q-num  { font-size: 11px; font-weight: 700; color: var(--primary-l); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+    .q-text { font-size: 15px; font-weight: 600; color: #1a1a2e; line-height: 1.55; margin-bottom: 16px; }
+
+    .option {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 14px; border: 2px solid var(--border); border-radius: 8px;
+      margin-bottom: 8px; cursor: pointer; transition: all .15s; background: #fff;
+    }
+    .option:hover   { border-color: var(--primary-l); background: #eff6ff; }
+    .option.selected{ border-color: var(--primary);   background: #dbeafe; }
+    .option input[type=radio] { margin-top: 2px; accent-color: var(--primary); flex-shrink: 0; width: 16px; height: 16px; }
+    .opt-text   { font-size: 14px; color: #374151; line-height: 1.45; }
+    .opt-letter { font-weight: 700; color: var(--primary); margin-right: 4px; }
+
+    /* ── Submit zone ── */
+    .submit-zone { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border); }
+    .warn-box {
+      display: none; margin-bottom: 16px; padding: 11px 16px;
+      background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px;
+      font-size: 13px; color: #92400e;
+    }
+
+    /* ── Score display ── */
+    .score-box {
+      text-align: center; padding: 32px; border-radius: 16px; margin-bottom: 24px;
+    }
+    .score-box.pass { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); }
+    .score-box.fail { background: linear-gradient(135deg, #fff3e0, #ffe0b2); }
+    .score-big   { font-size: 74px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+    .score-box.pass .score-big  { color: #1b5e20; }
+    .score-box.fail .score-big  { color: #e65100; }
+    .score-denom { font-size: 16px; color: var(--muted); margin-bottom: 6px; }
+    .score-pct   { font-size: 26px; font-weight: 700; }
+    .score-box.pass .score-pct  { color: var(--ok); }
+    .score-box.fail .score-pct  { color: var(--warn); }
+    .score-status{ display: inline-block; margin-top: 12px; padding: 4px 18px; border-radius: 20px; font-size: 13px; font-weight: 700; }
+    .score-box.pass .score-status { background: #a5d6a7; color: #1b5e20; }
+    .score-box.fail .score-status { background: #ffcc80; color: #e65100; }
+
+    /* ── Alerts ── */
+    .alert { display: none; padding: 13px 18px; border-radius: 10px; font-size: 14px; margin-bottom: 16px; line-height: 1.5; }
+    .alert.ok  { background: #e8f5e9; border: 1px solid #a5d6a7; color: #1b5e20; }
+    .alert.err { background: #fce4ec; border: 1px solid #f48fb1; color: #880e4f; }
+
+    /* ── Result detail ── */
+    .detail-title { font-size: 16px; font-weight: 700; color: var(--primary-d); margin: 28px 0 14px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+    .r-item { border-radius: 10px; padding: 13px 16px; margin-bottom: 10px; border-left: 4px solid; }
+    .r-item.ok   { background: #f0fdf4; border-color: #4ade80; }
+    .r-item.fail { background: #fff1f2; border-color: #fb7185; }
+    .r-q { font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 6px; }
+    .r-a { font-size: 13px; color: #4b5563; margin-bottom: 3px; }
+    .r-correct-ans { font-size: 13px; color: #059669; font-weight: 600; }
+    .badge { display: inline-block; padding: 2px 9px; border-radius: 12px; font-size: 11px; font-weight: 700; margin-left: 6px; vertical-align: middle; }
+    .badge.ok   { background: #dcfce7; color: #166534; }
+    .badge.fail { background: #ffe4e6; color: #9f1239; }
+
+    /* ── Overlay ── */
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); backdrop-filter: blur(3px); z-index: 999; justify-content: center; align-items: center; }
+    .overlay.show { display: flex; }
+    .ov-box { background: #fff; border-radius: 16px; padding: 40px 48px; text-align: center; max-width: 280px; }
+    .spinner { width: 44px; height: 44px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 14px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Anti-copy (quiz) ── */
+    #s-quiz { -webkit-user-select: none; user-select: none; }
+
+    /* ── Violation modal ── */
+    .viol-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(130,0,0,.90); backdrop-filter: blur(5px);
+      z-index: 1000; justify-content: center; align-items: center;
+    }
+    .viol-overlay.show { display: flex; }
+    .viol-box {
+      background: #fff; border-radius: 20px; padding: 40px 36px;
+      text-align: center; max-width: 400px; width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,.5);
+      border-top: 6px solid #b71c1c;
+    }
+    .viol-icon { font-size: 54px; margin-bottom: 10px; }
+    .viol-box h2 { font-size: 22px; color: #b71c1c; margin-bottom: 12px; }
+    .viol-box p  { font-size: 14px; color: #374151; line-height: 1.65; margin-bottom: 6px; }
+    .viol-count  { font-weight: 700; color: #b71c1c; font-size: 15px; margin: 8px 0 !important; }
+    .viol-btn {
+      display: block; width: 100%; margin-top: 22px; padding: 13px;
+      background: #b71c1c; color: #fff; border: none; border-radius: 8px;
+      font-size: 15px; font-weight: 600; cursor: pointer; transition: background .2s;
+    }
+    .viol-btn:hover { background: #c62828; }
+
+    /* ── Stats summary (results) ── */
+    .stats-row { display: flex; gap: 16px; margin: 10px 0 28px; }
+    .stat-card {
+      flex: 1; border-radius: 14px; padding: 24px 10px;
+      text-align: center; border: 2px solid;
+    }
+    .stat-card.ok   { background: #f0fdf4; border-color: #4ade80; }
+    .stat-card.fail { background: #fff1f2; border-color: #fb7185; }
+    .stat-num  { font-size: 54px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+    .stat-card.ok   .stat-num  { color: #166534; }
+    .stat-card.fail .stat-num  { color: #9f1239; }
+    .stat-label { font-size: 14px; font-weight: 600; }
+    .stat-card.ok   .stat-label { color: #166534; }
+    .stat-card.fail .stat-label { color: #9f1239; }
+
+    @media(max-width:600px){
+      .app-header{ padding: 24px 20px; }
+      .card { padding: 24px 18px; }
+      .score-big { font-size: 58px; }
+      .stat-num  { font-size: 42px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Violation warning modal -->
+<div class="viol-overlay" id="violOverlay">
+  <div class="viol-box">
+    <div class="viol-icon">⚠️</div>
+    <h2>¡Atención!</h2>
+    <p id="violMsg">Se detectó que intentaste salir de la evaluación.</p>
+    <p class="viol-count" id="violCount"></p>
+    <p>Este evento ha sido registrado y será reportado al docente.</p>
+    <button class="viol-btn" onclick="dismissViolation()">Continuar evaluación</button>
+  </div>
+</div>
+
+<!-- Sending overlay -->
+<div class="overlay" id="overlay">
+  <div class="ov-box">
+    <div class="spinner"></div>
+    <p style="font-weight:600;color:#374151">Enviando resultados…</p>
+    <p style="font-size:13px;color:var(--muted);margin-top:6px">Por favor espera</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="app-header">
+    <div class="uni">Unicomfacauca</div>
+    <h1>Evaluación de Metodología de Investigación</h1>
+    <div class="sub">23 preguntas · Selección múltiple</div>
+  </div>
+
+  <div class="card">
+
+    <!-- ── PANTALLA 1: Datos del estudiante ── -->
+    <div class="screen active" id="s-info">
+      <div class="sec-title">Bienvenido/a</div>
+      <div class="sec-desc">
+        Ingresa tus datos para comenzar. Al finalizar, tus resultados serán enviados
+        automáticamente al docente junto con el listado de participantes.
+      </div>
+
+      <div class="field">
+        <label for="fName">Nombre completo *</label>
+        <input id="fName" type="text" placeholder="Ej: Juan Carlos Pérez López" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="fEmail">Correo electrónico *</label>
+        <input id="fEmail" type="email" placeholder="Ej: estudiante@unicomfacauca.edu.co" autocomplete="email">
+      </div>
+
+      <div id="loadStatus" style="text-align:center; font-size:13px; margin-bottom:12px; color:var(--muted);">
+        Cargando preguntas…
+      </div>
+
+      <button class="btn btn-primary" id="btnStart" onclick="startQuiz()" disabled>Comenzar evaluación &rarr;</button>
+    </div>
+
+    <!-- ── PANTALLA 2: Preguntas ── -->
+    <div class="screen" id="s-quiz">
+      <div class="prog-row">
+        <span class="prog-label" id="progLabel">0 de 23 respondidas</span>
+        <span class="prog-label" id="progStudent" style="font-weight:600"></span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+
+      <div id="qContainer"></div>
+
+      <div class="submit-zone">
+        <div class="warn-box" id="warnBox"></div>
+        <button class="btn btn-primary" onclick="submitQuiz()">Enviar respuestas</button>
+      </div>
+    </div>
+
+    <!-- ── PANTALLA 3: Resultados ── -->
+    <div class="screen" id="s-results">
+      <div class="sec-title" id="resTitle">Resultados</div>
+
+      <div class="score-box" id="scoreBox">
+        <div class="score-big"  id="scoreBig">–</div>
+        <div class="score-denom" id="scoreDenom">de – respuestas correctas</div>
+        <div class="score-pct"  id="scorePct">–</div>
+        <div class="score-status" id="scoreStatus">–</div>
+      </div>
+
+      <div class="alert ok"  id="alertOk"></div>
+      <div class="alert err" id="alertErr"></div>
+
+      <div id="fallbackBox" style="display:none; margin-bottom:16px; padding:18px; background:#fff8e1; border:1px solid #ffd54f; border-radius:12px;">
+        <p style="font-size:14px; font-weight:700; color:#e65100; margin-bottom:6px;">⚠ No se pudo enviar el correo automáticamente.</p>
+        <p style="font-size:13px; color:#374151; margin-bottom:12px;">Muestra este código al docente o toma una captura de pantalla. El docente puede pegarlo en la página para ver tus resultados.</p>
+        <div style="position:relative;">
+          <textarea id="fallbackCode" readonly rows="3"
+            style="width:100%; font-family:monospace; font-size:12px; padding:10px; border:1px solid #e0e0e0; border-radius:8px; resize:none; background:#fff; color:#333;"></textarea>
+          <button onclick="copyFallback()"
+            style="margin-top:8px; padding:8px 18px; background:#f57c00; color:white; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
+            Copiar código
+          </button>
+          <span id="copyConfirm" style="display:none; margin-left:10px; font-size:13px; color:#2e7d32; font-weight:600;">✓ Copiado</span>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card ok">
+          <div class="stat-num" id="statCorrect">–</div>
+          <div class="stat-label">Correctas</div>
+        </div>
+        <div class="stat-card fail">
+          <div class="stat-num" id="statWrong">–</div>
+          <div class="stat-label">Incorrectas</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /card -->
+</div><!-- /wrap -->
+
+<script>
+/* ================================================================
+   CONFIGURACIÓN EMAILJS
+   Reemplaza los tres valores YOUR_… con los datos de tu cuenta.
+================================================================ */
+const CFG = {
+  publicKey:  'B7SZdmSN6re4hDSvv',
+  serviceId:  'service_y75nqv1',
+  templateId: 'template_6c2jzmt',
+};
+emailjs.init(CFG.publicKey);
+
+/* ================================================================
+   PREGUNTAS  (se cargan desde preguntas.txt)
+================================================================ */
+const LETTERS = ['A','B','C','D'];
+
+let questions = [];
+
+/* ================================================================
+   ESTADO
+================================================================ */
+let studentName  = '';
+let studentEmail = '';
+let answers      = [];
+let violations   = [];
+let quizActive   = false;
+let violPending  = false;
+
+/* ================================================================
+   CARGA Y PARSEO DE PREGUNTAS DESDE preguntas.txt
+================================================================ */
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function shuffleOptions(q) {
+  const indexed = q.options.map((text, i) => ({ text, isCorrect: i === q.correct }));
+  const shuffled = shuffleArray(indexed);
+  return {
+    text:    q.text,
+    options: shuffled.map(o => o.text),
+    correct: shuffled.findIndex(o => o.isCorrect),
+  };
+}
+
+function parseQuestions(raw) {
+  const parsed = [];
+  const blocks = raw.split(/\n\s*\n/);
+  for (const block of blocks) {
+    const lines = block.split('\n')
+      .map(l => l.trim())
+      .filter(l => l && !l.startsWith('#'));
+    if (!lines.length) continue;
+
+    let text = '';
+    const optMap = {};
+    let correctLetter = '';
+
+    for (const line of lines) {
+      if (/^PREGUNTA:/i.test(line))       text          = line.replace(/^PREGUNTA:\s*/i, '');
+      else if (/^([A-D]):\s/i.test(line)) optMap[line[0].toUpperCase()] = line.slice(3).trim();
+      else if (/^CORRECTA:/i.test(line))  correctLetter = line.replace(/^CORRECTA:\s*/i, '').trim().toUpperCase();
+    }
+
+    const letters = ['A','B','C','D'];
+    const options = letters.map(l => optMap[l]).filter(Boolean);
+    const correct = letters.indexOf(correctLetter);
+
+    if (text && options.length >= 2 && correct >= 0) {
+      parsed.push({ text, options, correct });
+    }
+  }
+  return parsed;
+}
+
+async function loadQuestions() {
+  const statusEl = document.getElementById('loadStatus');
+  const btnEl    = document.getElementById('btnStart');
+  try {
+    const res  = await fetch('./preguntas.txt');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const raw  = await res.text();
+    const base = parseQuestions(raw);
+    if (!base.length) throw new Error('No se encontraron preguntas válidas.');
+
+    // Aleatorizar orden de preguntas y opciones de cada una
+    questions = shuffleArray(base).map(shuffleOptions);
+    answers   = new Array(questions.length).fill(null);
+
+    statusEl.textContent  = `${questions.length} preguntas cargadas`;
+    statusEl.style.color  = 'var(--ok)';
+    btnEl.disabled        = false;
+  } catch (err) {
+    console.error('Error cargando preguntas:', err);
+    statusEl.textContent = '✗ Error al cargar las preguntas. Recarga la página.';
+    statusEl.style.color = 'var(--fail)';
+  }
+}
+
+/* ================================================================
+   PANTALLA 1 – INFO
+================================================================ */
+function startQuiz() {
+  const name  = document.getElementById('fName').value.trim();
+  const email = document.getElementById('fEmail').value.trim();
+
+  if (!name) {
+    alert('Por favor ingresa tu nombre completo.');
+    document.getElementById('fName').focus();
+    return;
+  }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    alert('Por favor ingresa un correo electrónico válido.');
+    document.getElementById('fEmail').focus();
+    return;
+  }
+
+  studentName  = name;
+  studentEmail = email;
+  document.getElementById('progStudent').textContent = name;
+
+  renderQuiz();
+  showScreen('s-quiz');
+  startMonitoring();
+}
+
+/* ================================================================
+   PANTALLA 2 – QUIZ
+================================================================ */
+function renderQuiz() {
+  const container = document.getElementById('qContainer');
+  container.innerHTML = '';
+
+  questions.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.id = `qcard-${qi}`;
+
+    const opts = q.options.map((opt, oi) => `
+      <label class="option" id="opt-${qi}-${oi}" onclick="pick(${qi},${oi})">
+        <input type="radio" name="q${qi}" value="${oi}">
+        <span class="opt-text"><span class="opt-letter">${LETTERS[oi]}.</span>${opt}</span>
+      </label>`).join('');
+
+    card.innerHTML = `
+      <div class="q-num">Pregunta ${qi + 1} de ${questions.length}</div>
+      <div class="q-text">${q.text}</div>
+      ${opts}`;
+
+    container.appendChild(card);
+  });
+}
+
+function pick(qi, oi) {
+  answers[qi] = oi;
+
+  // Visual state for options
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById(`opt-${qi}-${i}`);
+    if (el) el.classList.toggle('selected', i === oi);
+  }
+  const radio = document.querySelector(`input[name="q${qi}"][value="${oi}"]`);
+  if (radio) radio.checked = true;
+
+  // Mark card answered
+  const card = document.getElementById(`qcard-${qi}`);
+  if (card) {
+    card.classList.add('answered');
+    card.classList.remove('unanswered-highlight');
+  }
+
+  // Update progress
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = answers.filter(a => a !== null).length;
+  const pct  = (done / questions.length) * 100;
+  document.getElementById('progLabel').textContent = `${done} de ${questions.length} respondidas`;
+  document.getElementById('progFill').style.width  = `${pct}%`;
+}
+
+function submitQuiz() {
+  const missing = answers.reduce((acc, a, i) => a === null ? [...acc, i] : acc, []);
+  const warnEl  = document.getElementById('warnBox');
+
+  if (missing.length > 0) {
+    warnEl.style.display = 'block';
+    warnEl.textContent   = `⚠ Faltan ${missing.length} pregunta${missing.length > 1 ? 's' : ''} sin responder. Revisa las marcadas en amarillo.`;
+
+    // Highlight unanswered
+    missing.forEach(qi => {
+      const card = document.getElementById(`qcard-${qi}`);
+      if (card) card.classList.add('unanswered-highlight');
+    });
+
+    // Scroll to first missing
+    const firstCard = document.getElementById(`qcard-${missing[0]}`);
+    if (firstCard) firstCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  warnEl.style.display = 'none';
+  showResults();
+}
+
+/* ================================================================
+   PANTALLA 3 – RESULTADOS
+================================================================ */
+function showResults() {
+  stopMonitoring();
+
+  const total   = questions.length;
+  const score   = answers.reduce((acc, a, i) => acc + (a === questions[i].correct ? 1 : 0), 0);
+  const wrong   = total - score;
+  const pct     = ((score / total) * 100).toFixed(1);
+  const pass    = score >= Math.ceil(total * 0.6);
+
+  document.getElementById('resTitle').textContent = `¡Evaluación completada, ${studentName.split(' ')[0]}!`;
+
+  const box = document.getElementById('scoreBox');
+  box.className = `score-box ${pass ? 'pass' : 'fail'}`;
+  document.getElementById('scoreBig').textContent    = score;
+  document.getElementById('scoreDenom').textContent  = `de ${total} respuestas correctas`;
+  document.getElementById('scorePct').textContent    = `${pct}%`;
+  document.getElementById('scoreStatus').textContent = pass ? '✓ APROBADO' : '✗ REPROBADO';
+
+  document.getElementById('statCorrect').textContent = score;
+  document.getElementById('statWrong').textContent   = wrong;
+
+  showScreen('s-results');
+
+  saveParticipant(studentName, studentEmail, score, parseFloat(pct));
+  sendEmail(studentName, studentEmail, score, pct, [...answers]);
+}
+
+/* ================================================================
+   LISTADO DE PARTICIPANTES  (localStorage)
+================================================================ */
+const LS_KEY = 'quiz_metod_inv_v1';
+
+function saveParticipant(name, email, score, pct) {
+  const list = getParticipants();
+  list.push({
+    name, email, score, pct,
+    date: new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
+  });
+  localStorage.setItem(LS_KEY, JSON.stringify(list));
+}
+
+function getParticipants() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); }
+  catch { return []; }
+}
+
+/* ================================================================
+   CONSTRUCCIÓN DEL CUERPO DEL CORREO
+================================================================ */
+function buildEmailBody(name, email, score, pct, ans) {
+  const total = questions.length;
+  const pass  = score >= Math.ceil(total * 0.6);
+  const now   = new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' });
+  const line  = '='.repeat(62);
+  const dash  = '-'.repeat(62);
+
+  let txt = '';
+  txt += `${line}\n`;
+  txt += `NUEVO RESULTADO – EVALUACIÓN METODOLOGÍA DE INVESTIGACIÓN\n`;
+  txt += `${line}\n\n`;
+  txt += `Nombre     : ${name}\n`;
+  txt += `Correo     : ${email}\n`;
+  txt += `Fecha      : ${now}\n`;
+  txt += `Puntaje    : ${score} / ${total}\n`;
+  txt += `Porcentaje : ${pct}%\n`;
+  txt += `Estado     : ${pass ? '✓ APROBADO' : '✗ REPROBADO'}\n\n`;
+
+  txt += `${dash}\nDETALLE DE RESPUESTAS:\n${dash}\n\n`;
+
+  questions.forEach((q, i) => {
+    const ok  = ans[i] === q.correct;
+    const sel = LETTERS[ans[i]];
+    const cor = LETTERS[q.correct];
+    txt += `Pregunta ${String(i + 1).padStart(2)}: ${q.text}\n`;
+    txt += `  Respondió : ${sel}. ${q.options[ans[i]]}\n`;
+    txt += `  Resultado : ${ok ? '✓ CORRECTA' : `✗ INCORRECTA   (correcta: ${cor}. ${q.options[q.correct]})`}\n\n`;
+  });
+
+  // Participants list
+  const list = getParticipants();
+  txt += `${line}\nLISTADO ACUMULADO DE PARTICIPANTES  (${list.length} registro${list.length !== 1 ? 's' : ''})\n${line}\n\n`;
+
+  list.forEach((p, i) => {
+    const estado = p.score >= Math.ceil(total * 0.6) ? 'APROBADO' : 'REPROBADO';
+    txt += `${String(i + 1).padStart(2)}. ${p.name}\n`;
+    txt += `    Correo  : ${p.email}\n`;
+    txt += `    Puntaje : ${p.score}/${total}  (${p.pct}%)  –  ${estado}\n`;
+    txt += `    Fecha   : ${p.date}\n\n`;
+  });
+
+  if (list.length > 0) {
+    const avg    = (list.reduce((s, p) => s + p.pct, 0) / list.length).toFixed(1);
+    const passed = list.filter(p => p.score >= Math.ceil(total * 0.6)).length;
+    txt += `${dash}\n`;
+    txt += `Promedio del grupo : ${avg}%\n`;
+    txt += `Aprobados          : ${passed} / ${list.length}\n`;
+    txt += `${line}\n`;
+  }
+
+  // Violations
+  txt += `\n${line}\nREGISTRO DE COMPORTAMIENTO DURANTE LA EVALUACIÓN\n${line}\n`;
+  if (violations.length === 0) {
+    txt += `Sin incidencias registradas.\n`;
+  } else {
+    txt += `⚠ Se detectaron ${violations.length} intento${violations.length > 1 ? 's' : ''} de abandonar la evaluación:\n\n`;
+    violations.forEach((v, i) => {
+      txt += `  ${i + 1}. ${v.type}\n     Hora: ${v.time}\n`;
+    });
+  }
+  txt += `${line}\n`;
+
+  return txt;
+}
+
+/* ================================================================
+   ENVÍO DE CORREO  (con reintentos automáticos)
+================================================================ */
+function sendEmail(name, email, score, pct, ans) {
+  document.getElementById('overlay').classList.add('show');
+
+  const subject = `[Evaluación MetInv] ${name} – ${score}/${questions.length} (${pct}%)`;
+  const message = buildEmailBody(name, email, score, pct, ans);
+  const params  = { subject, message, reply_to: email, student_name: name, student_email: email };
+
+  // Retraso aleatorio 0-8 s para evitar ráfagas simultáneas
+  const delay = Math.floor(Math.random() * 8000);
+
+  setTimeout(() => attemptSend(params, 1), delay);
+}
+
+function attemptSend(params, attempt) {
+  const MAX_ATTEMPTS = 4;
+  const RETRY_DELAY  = 6000; // 6 s entre reintentos
+
+  emailjs.send(CFG.serviceId, CFG.templateId, params)
+    .then(() => {
+      document.getElementById('overlay').classList.remove('show');
+      const el = document.getElementById('alertOk');
+      el.style.display = 'block';
+      el.textContent   = '✓ Tus resultados han sido enviados exitosamente al docente.';
+    })
+    .catch(err => {
+      console.warn(`EmailJS intento ${attempt} fallido:`, err);
+      if (attempt < MAX_ATTEMPTS) {
+        // Actualizar mensaje del overlay durante reintento
+        const p = document.querySelector('#overlay p:first-of-type');
+        if (p) p.textContent = `Reintentando envío (${attempt}/${MAX_ATTEMPTS - 1})…`;
+        setTimeout(() => attemptSend(params, attempt + 1), RETRY_DELAY);
+      } else {
+        document.getElementById('overlay').classList.remove('show');
+        showEmailFallback();
+      }
+    });
+}
+
+/* ================================================================
+   FALLBACK CUANDO FALLA EL CORREO
+================================================================ */
+function showEmailFallback() {
+  const total  = questions.length;
+  const score  = answers.reduce((acc, a, i) => acc + (a === questions[i].correct ? 1 : 0), 0);
+  const pct    = ((score / total) * 100).toFixed(1);
+  const now    = new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' });
+
+  const payload = {
+    n: studentName,
+    e: studentEmail,
+    s: score,
+    t: total,
+    p: pct,
+    d: now,
+    a: answers,
+    v: violations.length,
+  };
+
+  const code = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  document.getElementById('fallbackCode').value = code;
+  document.getElementById('fallbackBox').style.display = 'block';
+}
+
+function copyFallback() {
+  const ta = document.getElementById('fallbackCode');
+  ta.select();
+  ta.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(ta.value).catch(() => document.execCommand('copy'));
+  const confirm = document.getElementById('copyConfirm');
+  confirm.style.display = 'inline';
+  setTimeout(() => confirm.style.display = 'none', 2500);
+}
+
+/* ================================================================
+   MONITOREO DE COMPORTAMIENTO
+================================================================ */
+function startMonitoring() {
+  quizActive  = true;
+  violPending = false;
+  document.addEventListener('visibilitychange', onVisibilityChange);
+  window.addEventListener('blur', onWindowBlur);
+  document.addEventListener('copy', blockCopy);
+  document.addEventListener('cut',  blockCopy);
+  document.addEventListener('contextmenu', blockCopy);
+}
+
+function stopMonitoring() {
+  quizActive = false;
+  document.removeEventListener('visibilitychange', onVisibilityChange);
+  window.removeEventListener('blur', onWindowBlur);
+  document.removeEventListener('copy', blockCopy);
+  document.removeEventListener('cut',  blockCopy);
+  document.removeEventListener('contextmenu', blockCopy);
+}
+
+function blockCopy(e) {
+  e.preventDefault();
+  return false;
+}
+
+function onVisibilityChange() {
+  if (!quizActive || !document.hidden) return;
+  recordViolation('Cambio de pestaña o minimización de ventana');
+}
+
+function onWindowBlur() {
+  if (!quizActive || document.hidden) return;
+  recordViolation('Cambio a otra aplicación o ventana');
+}
+
+function recordViolation(type) {
+  if (violPending) return;
+  const time = new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' });
+  violations.push({ type, time });
+  violPending = true;
+  document.getElementById('violMsg').textContent =
+    `Se detectó: ${type}.`;
+  document.getElementById('violCount').textContent =
+    `Este es el intento #${violations.length} registrado durante la evaluación.`;
+  document.getElementById('violOverlay').classList.add('show');
+}
+
+function dismissViolation() {
+  document.getElementById('violOverlay').classList.remove('show');
+  violPending = false;
+}
+
+/* ================================================================
+   UTILS
+================================================================ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Iniciar carga de preguntas al abrir la página
+loadQuestions();
+</script>
+</body>
+</html>

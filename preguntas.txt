@@ -1,0 +1,226 @@
+# ================================================================
+# ARCHIVO DE PREGUNTAS – Evaluación Marketing, RRHH y Conversión Digital
+# ================================================================
+# FORMATO:
+#   PREGUNTA: texto de la pregunta
+#   A: opción A
+#   B: opción B
+#   C: opción C
+#   D: opción D
+#   CORRECTA: letra de la opción correcta (A, B, C o D)
+#
+# Separa cada pregunta con UNA línea en blanco.
+# Las líneas que empiezan con # son comentarios y se ignoran.
+# Puedes tener cualquier cantidad de preguntas.
+# ================================================================
+
+
+PREGUNTA: Al definir un "Buyer persona", ¿a qué categoría pertenece la pregunta sobre por qué el cliente dudaría en elegir el producto debido a factores como el precio o la complejidad?
+A: Puntos de dolor.
+B: Datos demográficos.
+C: Objeciones.
+D: Metas y motivaciones.
+CORRECTA: C
+
+PREGUNTA: En la batalla por el talento entre corporaciones y startups, ¿qué característica define el entorno operativo de una Startup?
+A: Procesos rígidos, predecibles y establecidos durante años.
+B: Presupuestos gigantescos y predecibles.
+C: Tolerancia al error muy alta.
+D: Ambigüedad, alta velocidad y cambio constante.
+CORRECTA: D
+
+PREGUNTA: Al identificar ineficiencias mediante el Dashboard de KPIs, ¿cuál es la media del mercado del "Time to Hire" (tiempo de contratación)?
+A: 90 días.
+B: 42 días.
+C: 10 días.
+D: 6 meses.
+CORRECTA: B
+
+PREGUNTA: En el ámbito de los Agentes de IA gestionando la intención, se menciona un "Doble Desafío" para el nuevo consumidor, ¿en qué consiste?
+A: Convencer al humano y ganarse la confianza técnica del algoritmo.
+B: Crear un avatar virtual y automatizar los posteos en redes sociales.
+C: Integrar IA en la contabilidad y reducir gastos fijos.
+D: Diseñar una página web más rápida y con mayor número de botones.
+CORRECTA: A
+
+PREGUNTA: ¿En qué escenario es más recomendable colocar un CTA "Below the Fold" (que requiere scroll)?
+A: Cuando se ofrecen productos gratuitos de baja fricción.
+B: En ofertas de e-commerce impulsivas.
+C: Cuando el usuario tiene un nivel de intención muy caliente.
+D: Cuando son ofertas complejas o costosas que requieren contexto.
+CORRECTA: D
+
+PREGUNTA: En el contexto de Diversidad, Equidad e Inclusión (DEI), ¿cuál es uno de los resultados directos de tener equipos empoderados y diversos?
+A: Desarrollan mejores productos y resuelven problemas con mayor creatividad bajo presión.
+B: Incrementan su nivel de fricción al tomar decisiones operativas.
+C: Aumenta la inversión necesaria en software ATS.
+D: Mayor rotación de personal en los primeros 30 días.
+CORRECTA: A
+
+PREGUNTA: Según el framework de optimización A/B Testing, ¿cuál es una regla fundamental al crear las variantes (Control vs Cambio)?
+A: Ejecutar la prueba durante máximo dos días.
+B: Analizar los resultados únicamente mediante mapas de calor.
+C: Testear solo una variable a la vez.
+D: Modificar al menos tres componentes visuales simultáneamente.
+CORRECTA: C
+
+PREGUNTA: Dentro de la estrategia de las 4P, ¿qué elemento define la forma en que se comunica la existencia de un producto, incluyendo los canales a usar y el tono del mensaje?
+A: Producto.
+B: Precio.
+C: Promoción.
+D: Plaza.
+CORRECTA: C
+
+PREGUNTA: Si un "Scrollmap" muestra que el usuario abandona la lectura antes de llegar al CTA (zona fría azul), ¿cuál es la solución sugerida?
+A: Ocultar el botón para generar intriga.
+B: Añadir más texto explicativo antes de la oferta.
+C: Mover el CTA más arriba o mejorar el gancho inicial.
+D: Cambiar el color del texto a rojo.
+CORRECTA: C
+
+PREGUNTA: Dentro de los "5 Pecados Capitales del CTA", ¿a qué se refiere el antipatrón de "El Botón Fantasma" (Ghost Button)?
+A: Usar un botón con borde sutil sin fondo de color para la acción principal.
+B: Usar contadores de tiempo falsos que se reinician.
+C: Pintar el botón del mismo color primario que la marca.
+D: Múltiples botones compitiendo en la misma pantalla.
+CORRECTA: A
+
+PREGUNTA: ¿Qué tecnología de RRHH permite automatizar las comunicaciones con los candidatos para ahorrar tiempo y mejorar la imagen de la marca?
+A: Single Source of Truth.
+B: Autopilot.
+C: Multiposting.
+D: Smart Filtering.
+CORRECTA: B
+
+PREGUNTA: Según el material proporcionado, ¿qué es un "Buyer persona"?
+A: El proveedor principal que abastece a la empresa.
+B: Una representación semi-ficticia de tu cliente ideal.
+C: El jefe de ventas corporativo de la organización.
+D: Un sistema automatizado para realizar compras mayoristas.
+CORRECTA: B
+
+PREGUNTA: ¿A qué concepto de Recursos Humanos pertenece la creación de contenido de valor (blogs, webinars) para posicionar orgánicamente a la empresa y atraer talento?
+A: Relocation Internacional.
+B: Multiposting Activo.
+C: Headhunting Ejecutivo (C-Suite).
+D: Inbound Recruiting.
+CORRECTA: D
+
+PREGUNTA: Para cumplir con los estándares de accesibilidad táctil, ¿cuál debe ser el tamaño objetivo mínimo (Touch Target) de un botón?
+A: 24x24px.
+B: 100x50px.
+C: 44x44px.
+D: 18x22px.
+CORRECTA: C
+
+PREGUNTA: Según el modelo de carga cognitiva, ¿en qué milisegundo exacto ocurre un clic por parte del usuario?
+A: Cuando se agota el tiempo de una oferta.
+B: Cuando se lee la palabra "Gratis".
+C: Cuando el diseño del botón es de color verde.
+D: Cuando la motivación supera a la fricción percibida.
+CORRECTA: D
+
+PREGUNTA: Al interceptar la mirada del usuario en landing pages visuales, ¿qué patrón geométrico de escaneo se recomienda para ubicar el CTA de forma lógica?
+A: Patrón Circular.
+B: Patrón Z.
+C: Patrón en Espiral.
+D: Patrón F.
+CORRECTA: B
+
+PREGUNTA: ¿Qué función cumple el espacio negativo o "jerarquía del vacío" alrededor de un botón Call To Action (CTA)?
+A: Ocultar información irrelevante de la página web.
+B: Obligar al usuario a hacer scroll hacia la parte inferior.
+C: Aumentar la fricción mental del usuario.
+D: Aislar el CTA, prevenir clics accidentales y definir la jerarquía visual.
+CORRECTA: D
+
+PREGUNTA: ¿Cuál es la fórmula del Copywriting de Conversión para generar clics según el material?
+A: (Urgencia + Escasez) / Diseño visual.
+B: (Verbo de Acción + Beneficio Directo) / Urgencia.
+C: (Prueba social + Garantía) / Fricción.
+D: (Verbo genérico + Características) / Precio.
+CORRECTA: B
+
+PREGUNTA: ¿Qué etapa del embudo de conversión (TOFU) tiene como objetivo generar tráfico y convertir extraños en visitantes cualificados?
+A: Cierre de la transacción.
+B: Decisión y compra.
+C: Atracción y consciencia (Descubrimiento).
+D: Fidelización y Post-Venta.
+CORRECTA: C
+
+PREGUNTA: En "La Guerra del ROI", ¿qué canal destaca por tener un retorno de $36 por cada $1 invertido debido a su segmentación y automatización?
+A: Publicidad en TikTok.
+B: Pautas en revistas impresas.
+C: Email Marketing.
+D: Alcance masivo en Instagram.
+CORRECTA: C
+
+PREGUNTA: ¿Cuál es el canal preferido por el 76% de los candidatos a la hora de buscar trabajo de forma externa?
+A: Portales de empleo genéricos.
+B: Clasificados en medios impresos.
+C: Redes sociales especializadas.
+D: El Craer Site (página de empleo propia de la empresa).
+CORRECTA: D
+
+PREGUNTA: ¿Qué método de la Fase de Selección permite evaluar comportamientos pasados analizando la Situación, Tarea, Acción y Resultado?
+A: Pruebas de código en la nube.
+B: Panel interactivo de ajuste cultural.
+C: Metodología STAR en entrevistas por competencias.
+D: Examen médico psicotécnico.
+CORRECTA: C
+
+PREGUNTA: ¿Cuál es la primera etapa del Motor de Reclutamiento estructurado de 5 fases?
+A: Planificación (Definición del perfil ideal).
+B: Onboarding.
+C: Selección (Filtro).
+D: Oferta y negociación.
+CORRECTA: A
+
+PREGUNTA: En la Ciencia de la Evaluación (Zoom a la Fase 3), ¿qué tipo de test se utiliza para medir la decisión, la interacción y la serenidad del candidato?
+A: Evaluaciones de personalidad basadas en el Test DISC.
+B: Ejercicios puramente teóricos de universidad.
+C: Examen general de aptitud matemática.
+D: Test de habilidades técnicas (ej: escribir código Python).
+CORRECTA: A
+
+PREGUNTA: En la fase 5 de "El Aterrizaje: Onboarding Estratégico", ¿qué se espera lograr alrededor del Día 30?
+A: Autonomía operativa y alineación profunda de KPIs.
+B: Bienvenida cultural e introducción de la misión corporativa.
+C: Primeras victorias tempranas (Quick Wins) y comprensión de dinámicas de equipo.
+D: El talento es plenamente productivo y es parte integral del motor.
+CORRECTA: C
+
+PREGUNTA: Al construir el perfil del buyer persona, ¿en qué categoría se agrupan las preguntas sobre las redes sociales que usa, dónde busca información y qué herramientas utiliza?
+A: Metas y motivaciones.
+B: Intereses y comportamiento.
+C: Datos demográficos.
+D: Puntos de dolor.
+CORRECTA: B
+
+PREGUNTA: En la "Propuesta de Valor para el Empleado (PVE)" de una startup, ¿qué significa la "Equidad"?
+A: La posibilidad real de ser dueños de una parte del éxito mediante opciones sobre acciones (Stock Options).
+B: Ofrecer los mismos bonos en efectivo a todos por igual.
+C: Trabajar con un propósito genuino y sin fines de lucro.
+D: Estar aislados del crecimiento exponencial del negocio.
+CORRECTA: A
+
+PREGUNTA: En la "Preselección Inteligente" (Zoom a Fase 1 del embudo de RRHH), ¿qué datos tácticos se solicitan para ahorrar tiempo antes de las entrevistas humanas?
+A: Respuestas a pruebas psicotécnicas de personalidad.
+B: Referencias de empleos pasados y hobbies personales.
+C: Expectativas salariales, tiempo de incorporación y disponibilidad geográfica.
+D: Nivel de experiencia en lenguajes de programación y certificaciones.
+CORRECTA: C
+
+PREGUNTA: Según las métricas sobre el coste de una mala contratación, ¿qué porcentaje de abandonos voluntarios en el primer año son causados directamente por un proceso deficiente?
+A: 10%.
+B: 25%.
+C: 50%.
+D: 80%.
+CORRECTA: D
+
+PREGUNTA: En la estrategia de las 4P, ¿a qué se refiere el componente "Plaza"?
+A: Los canales donde el cliente puede encontrar y comprar la oferta (app, web, tienda).
+B: La forma en la que comunicas la existencia de tu producto.
+C: El diseño físico o las funciones del producto que resuelven el problema.
+D: El valor monetario o precio que están dispuestos a pagar.
+CORRECTA: A
